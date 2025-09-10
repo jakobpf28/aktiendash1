@@ -1,70 +1,71 @@
-const stocks = [
-    {name: "TechCorp", price: 100},
-    {name: "BioHealth", price: 80},
-    {name: "AutoMotors", price: 120},
-    {name: "GreenEnergy", price: 90},
-    {name: "FinBank", price: 110}
-];
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const darkModeIcon = darkModeToggle.querySelector('i');
 
-const stockTable = document.getElementById('stockTable');
-const simulateCrashBtn = document.getElementById('simulateCrash');
-const updateIntervalInput = document.getElementById('updateInterval');
-
-let crashScheduled = false;
-
-// Funktion zum Anzeigen der Aktien
-function renderStocks() {
-    stockTable.innerHTML = '';
-    stocks.forEach(stock => {
-        const row = document.createElement('tr');
-        row.className = stock.change > 0 ? 'positive' : stock.change < 0 ? 'negative' : '';
-        row.innerHTML = `
-            <td>${stock.name}</td>
-            <td>${stock.price.toFixed(2)}</td>
-            <td>${stock.change ? stock.change.toFixed(2) : '0.00'}</td>
-        `;
-        stockTable.appendChild(row);
-    });
-}
-
-// Funktion für zufällige Preisänderungen
-function updateStocks() {
-    stocks.forEach(stock => {
-        const change = (Math.random() - 0.5) * 2; // -1 bis +1
-        stock.price += change;
-        stock.change = change;
-        if (stock.price < 0) stock.price = 0;
-    });
-    renderStocks();
-}
-
-// Funktion für Aktien-Crash
-function triggerCrash() {
-    stocks.forEach(stock => {
-        stock.price *= 0.3; // Crash: Preise fallen auf 30%
-        stock.change = -stock.price;
-    });
-    renderStocks();
-    crashScheduled = false;
-}
-
-// Automatische Updates
-let interval = setInterval(updateStocks, parseInt(updateIntervalInput.value));
-
-updateIntervalInput.addEventListener('change', () => {
-    clearInterval(interval);
-    interval = setInterval(updateStocks, parseInt(updateIntervalInput.value));
+darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        darkModeIcon.classList.remove('fa-moon');
+        darkModeIcon.classList.add('fa-sun');
+    } else {
+        darkModeIcon.classList.remove('fa-sun');
+        darkModeIcon.classList.add('fa-moon');
+    }
 });
 
-// Crash-Button
-simulateCrashBtn.addEventListener('click', () => {
-    triggerCrash();
+// Modal Handling
+const loginBtn = document.getElementById('login-btn');
+const registerBtn = document.getElementById('register-btn');
+const loginModal = document.getElementById('login-modal');
+const registerModal = document.getElementById('register-modal');
+const closeModalButtons = document.querySelectorAll('.close-modal');
+
+loginBtn.addEventListener('click', () => {
+    loginModal.style.display = 'flex';
 });
 
-// Optional: Automatischer Crash nach 30 Sekunden
-setTimeout(() => {
-    triggerCrash();
-    crashScheduled = true;
-}, 30000);
+registerBtn.addEventListener('click', () => {
+    registerModal.style.display = 'flex';
+});
 
-renderStocks();
+closeModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+        registerModal.style.display = 'none';
+    });
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === loginModal) {
+        loginModal.style.display = 'none';
+    }
+    if (e.target === registerModal) {
+        registerModal.style.display = 'none';
+    }
+});
+
+// Mobile Menu Toggle
+const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+const navMenu = document.querySelector('nav ul');
+
+mobileMenuBtn.addEventListener('click', () => {
+    navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+});
+
+// Simple form validation
+const forms = document.querySelectorAll('form');
+forms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Formular wurde abgeschickt! (Diese Funktion ist nur eine Demo)');
+    });
+});
+
+// Pricing card selection
+const pricingButtons = document.querySelectorAll('.pricing-card .btn');
+pricingButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        alert('Abonnement ausgewählt! (Diese Funktion ist nur eine Demo)');
+    });
+});
