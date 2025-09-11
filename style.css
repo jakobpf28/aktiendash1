@@ -28,6 +28,10 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background-color: var(--light);
     color: var(--secondary);
@@ -568,7 +572,6 @@ textarea {
 
 /* Footer */
 footer {
-    /* background-color: var(--secondary); */
     background-color: #0f172a;
     color: white;
     padding: 60px 0 30px;
