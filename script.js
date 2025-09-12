@@ -71,35 +71,122 @@ pricingButtons.forEach(button => {
 });
 
 document.getElementById('modern-contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+e.preventDefault();
+
+const name = document.getElementById('name').value;
+const email = document.getElementById('email').value;
+const message = document.getElementById('message').value;
+
+const successMessage = document.getElementById('success-message');
+const errorMessage = document.getElementById('error-message');
+
+// Simple validation
+if (name && email && message) {
+    // In a real application, you would send the form data to a server here
+    successMessage.style.display = 'block';
+    errorMessage.style.display = 'none';
+    
+    // Reset form
+    this.reset();
+    
+    // Hide success message after 5 seconds
+    setTimeout(() => {
+        successMessage.style.display = 'none';
+    }, 5000);
+} else {
+    errorMessage.style.display = 'block';
+    successMessage.style.display = 'none';
+    
+    // Hide error message after 5 seconds
+    setTimeout(() => {
+        errorMessage.style.display = 'none';
+    }, 5000);
+}
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+            const previewButtons = document.querySelectorAll('.preview-button');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalImage = document.getElementById('modalImage');
+            const modalClose = document.getElementById('modalClose');
+            const zoomInBtn = document.getElementById('zoomIn');
+            const zoomOutBtn = document.getElementById('zoomOut');
+            const resetZoomBtn = document.getElementById('resetZoom');
             
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
+            let currentScale = 1;
             
-            const successMessage = document.getElementById('success-message');
-            const errorMessage = document.getElementById('error-message');
+            // Vollbild für alle Buttons aktivieren
+            previewButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const cardImage = this.closest('.analysis-image').querySelector('img');
+                    modalImage.src = cardImage.src;
+                    modalImage.alt = cardImage.alt;
+                    modalOverlay.classList.add('active');
+                    resetZoom();
+                    document.body.style.overflow = 'hidden';
+                });
+            });
             
-            // Simple validation
-            if (name && email && message) {
-                // In a real application, you would send the form data to a server here
-                successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
-                
-                // Reset form
-                this.reset();
-                
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 5000);
-            } else {
-                errorMessage.style.display = 'block';
-                successMessage.style.display = 'none';
-                
-                // Hide error message after 5 seconds
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 5000);
+            // Bild auch durch Klick auf das Bild selbst öffnen
+            document.querySelectorAll('.analysis-image').forEach(image => {
+                image.addEventListener('click', function() {
+                    const cardImage = this.querySelector('img');
+                    modalImage.src = cardImage.src;
+                    modalImage.alt = cardImage.alt;
+                    modalOverlay.classList.add('active');
+                    resetZoom();
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            // Vollbild schließen
+            modalClose.addEventListener('click', function() {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // Schließen wenn außerhalb des Bildes geklickt wird
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    modalOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Zoom-Funktionen
+            zoomInBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentScale += 0.2;
+                applyZoom();
+            });
+            
+            zoomOutBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentScale = Math.max(0.5, currentScale - 0.2);
+                applyZoom();
+            });
+            
+            resetZoomBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                resetZoom();
+            });
+            
+            function applyZoom() {
+                modalImage.style.transform = `scale(${currentScale})`;
+                modalImage.style.transition = 'transform 0.3s ease';
             }
+            
+            function resetZoom() {
+                currentScale = 1;
+                modalImage.style.transform = 'scale(1)';
+            }
+            
+            // Schließen mit Escape-Taste
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                    modalOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
         });
